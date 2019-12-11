@@ -1,44 +1,44 @@
-#!/bin/bash
+#!/bin/bash -x
 
 echo "Welcome To The Flip Coin"
 
+read -p "Enter How Many Coin You Want To Flip" coin
 read -p "Enter How Many Time You Want To Flip" num
-
-coin=3
 
 declare -A flipDict
 
 function getCoinValue()
 {
-local coinV=""
+local coinVal=""
 
-for (( i=0; i<$coin; i++ ))
-do
+	for (( i=0; i<$coin; i++ ))
+	do
+
 		flipResult=$((RANDOM%2))
 		if [ $flipResult -eq 1 ]
 		then
-				coinV="$coinV H"
+			coinVal=$coinVal"H"
 		else
-				coinV="$coinV T"
+			coinVal=$coinVal"T"
 		fi
 	done
-		echo $coinV
+
+		echo $coinVal
 }
 
 function main()
 {
 	for (( j=0; j<$num; j++ ))
 	do
-		resultV=$(getCoinValue)
-		flipDict["flipCoin$j"]=$resultV
-
+		resultVal=$(getCoinValue)
+		flipDict[$resultVal]=$(( ${flipDict[$resultVal]} + 1 ))
 	done
 
-	for (( k=0; k<${#flipDict[@]}; k++ ))
+	for result in ${!flipDict[@]}
 	do
-	echo "FlipCoin $k     ${flipDict[flipCoin$k]}"
-	done
-
+		echo ${flipDict[$result]}
+		percentage=$(( ${flipDict[$result]} *100 / $num ))
+		echo $result"	"$percentage"%"
+	done | sort -k2 -nr | awk 'NR==1{print ($1"	"$2)}'
 }
 main
-
