@@ -2,30 +2,43 @@
 
 echo "Welcome To The Flip Coin"
 
-flipCoinResult=$((RANDOM%2))
+read -p "Enter How Many Time You Want To Flip" num
 
-read -p "Enter How Many Times U Want To Flip Coin" num
-head=0
-tail=0
+coin=2
 
 declare -A flipDict
 
-for (( i=1;i<=$num;i++))
-do
-	flipCoin=$((RANDOM%2))
-	if [ $flipCoin -eq 1 ]
-	then
-	head=$(($head+1))
-	flipDict["flipCoin$i"]="head"
-	else
-	tail=$(($tail+1))
-	flipDict["flipCoin$i"]="tail"
-	fi
-done
+function getCoinValue()
+{
+local coinV=""
 
-echo "head : "$head
-echo "Tail : "$tail
-for(( i=1; i<=${#flipDict[@]}; i++ ))
+for (( i=0; i<$coin; i++ ))
 do
-	echo "FlipCoin $i     ${flipDict[flipCoin$i]}"
-done
+		flipResult=$((RANDOM%2))
+		if [ $flipResult -eq 1 ]
+		then
+				coinV="$coinV H"
+		else
+				coinV="$coinV T"
+		fi
+	done
+		echo $coinV
+}
+
+function main()
+{
+	for (( j=0; j<$num; j++ ))
+	do
+		resultV=$(getCoinValue)
+		flipDict["flipCoin$j"]=$resultV
+
+	done
+
+	for (( k=0; k<${#flipDict[@]}; k++ ))
+	do
+	echo "FlipCoin $k     ${flipDict[flipCoin$k]}"
+	done
+
+}
+main
+
