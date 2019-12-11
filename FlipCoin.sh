@@ -4,7 +4,7 @@ echo "Welcome To The Flip Coin"
 
 read -p "Enter How Many Time You Want To Flip" num
 
-coin=2
+coin=3
 
 declare -A flipDict
 
