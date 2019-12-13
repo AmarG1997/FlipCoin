@@ -1,33 +1,32 @@
 #!/bin/bash -x
 
 echo "Welcome To The Flip Coin"
-read -p "Enter How Many Time You Want To Flip" num
-declare -A flipDict
 
+read -p "Enter How Many Time You Want To Flip" numberOfFlips
+declare -A flipResultDict
 
-function main()
+function getFlipPercentage()
 {
 	coin=$1
 
-	for (( j=0; j<$num; j++ ))
+	for (( j=0; j<$numberOfFlips; j++ ))
 	do
 		resultVal=$(getCoinValue $coin)
-		flipDict[$resultVal]=$(( ${flipDict[$resultVal]} + 1 ))
+		flipResultDict[$resultVal]=$(( ${flipResultDict[$resultVal]} + 1 ))
 	done
 
-	for result in ${!flipDict[@]}
+	for result in ${!flipResultDict[@]}
 	do
-		echo ${flipDict[$result]}
-		percentage=$(( ${flipDict[$result]} *100 / $num ))
+		echo ${flipResultDict[$result]}
+		percentage=$(( ${flipResultDict[$result]} *100 / $numberOfFlips ))
 		echo $result"	"$percentage"%"
 	done | sort -k2 -nr | awk 'NR==1{print ($1"	"$2)}'
 }
 
-
 function getCoinValue()
 {
-coin=$1
-local coinVal=""
+	coin=$1
+	local coinVal=""
 
 	for (( i=0; i<$coin; i++ ))
 	do
@@ -44,28 +43,28 @@ local coinVal=""
 		echo $coinVal
 }
 
-echo "Enter 1 for Singlet"
-echo "Enter 2 for Doublet"
-echo "Enter 3 for Triplet"
-read choice
+function main()
+{
+	echo "Enter 1 for Singlet"
+	echo "Enter 2 for Doublet"
+	echo "Enter 3 for Triplet"
+	read choice
 
-case $choice in
+	case $choice in
 
-1)
-	coin=1
-	(main $coin)
-	;;
-2)
-	coin=2
-	(main $coin)
-	;;
-3)
-	coin=3
-	(main $coin)
-	;;
-esac
+	1)
+		coin=1
+		(getFlipPercentage $coin)
+		;;
+	2)
+		coin=2
+		(getFlipPercentage $coin)
+		;;
+	3)
+		coin=3
+		(getFlipPercentage $coin)
+		;;
+	esac
+}
 
-
-
-
-
+main
